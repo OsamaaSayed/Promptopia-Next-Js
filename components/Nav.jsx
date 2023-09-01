@@ -2,19 +2,23 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 const Nav = () => {
-  const isUserLoggedIn = true;
   const [providers, setProviders] = useState(null);
   const [toggleDropDown, setToggleDropDown] = useState(false);
 
+  const { data: session } = useSession();
+
   useEffect(() => {
     const setProvidersList = async () => {
-      const response = await getProviders();
+      const response = await getProviders(); //~ It calls /api/auth/providers and returns a list of the currently configured authentication providers
       setProviders(response);
-      console.log(response);
+      console.log(
+        "🚀 ~ file: Nav.jsx:17 ~ setProvidersList ~ response:",
+        response
+      );
     };
 
     setProvidersList();
@@ -35,7 +39,7 @@ const Nav = () => {
 
       {/* Desktop Navigation */}
       <div className="hidden sm:flex ">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
               Create Post
@@ -46,7 +50,7 @@ const Nav = () => {
 
             <Link href="/profile">
               <Image
-                src="/assets/images/logo.svg"
+                src={session?.user.image}
                 alt="profile"
                 width={37}
                 height={37}
@@ -73,14 +77,14 @@ const Nav = () => {
 
       {/* Mobile Navigation */}
       <div className="flex relative sm:hidden">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex">
             <Image
-              src="/assets/images/logo.svg"
+              src={session?.user.image}
               alt="profile"
               width={37}
               height={37}
-              className="rounded-full"
+              className="rounded-full cursor-pointer"
               onClick={() => setToggleDropDown((prev) => !prev)}
             />
 
