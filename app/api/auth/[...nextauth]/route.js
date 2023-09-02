@@ -31,7 +31,7 @@ const handler = NextAuth({
                 //~ check if user already exists
                 const userExists = await User.findOne({ email: profile.email })
 
-                //~ if not , create a new user and save it to database
+                //~ if not , create a new user and save it into database
                 if (!userExists) {
                     await User.create({
                         email: profile.email,
@@ -43,7 +43,7 @@ const handler = NextAuth({
                 //* if we sign in successfully return true
                 return true;
             } catch (err) {
-                console.log(err);
+                console.log("🚀 ~ file: route.js:47 ~ signIn ~ err:", err)
                 return false;
             }
         }
@@ -52,4 +52,5 @@ const handler = NextAuth({
 })
 
 export { handler as GET, handler as POST };
+
 

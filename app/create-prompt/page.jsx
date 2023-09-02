@@ -9,6 +9,9 @@ const CreatePrompt = () => {
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({ prompt: "", tag: "" });
 
+  const router = useRouter();
+  const { data: session } = useSession();
+
   const createPrompt = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -18,7 +21,7 @@ const CreatePrompt = () => {
         method: "POST",
         body: JSON.stringify({ ...post, userId: session?.user.id }),
       });
-      console.log(response);  
+      console.log(response.json());
       if (response.ok) router.push("/");
     } catch (err) {
       console.log(err);
