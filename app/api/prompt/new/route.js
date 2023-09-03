@@ -2,7 +2,6 @@ import { connectToDB } from "@utils/database";
 import Prompt from '@models/prompt'
 
 export const POST = async (req) => {
-    console.log("🚀 ~ file: route.js:5 ~ POST ~ req:", req)
     const { userId, prompt, tag } = await req.json();
 
     try {
