@@ -1,12 +1,14 @@
 import { connectToDB } from "@utils/database";
 import Prompt from '@models/prompt';
 
-//~ get all prompts for all creators (For Home Page , Feed component)
-export const GET = async (req) => {
+//~ get all prompts related to the logged in creator , (For Profile Page)
+export const GET = async (req, { params }) => {
     try {
         await connectToDB();
 
-        const prompts = await Prompt.find({}).populate('creator');
+        const prompts = await Prompt.find({
+            creator: params.id
+        }).populate('creator');
         return new Response(JSON.stringify(prompts), { status: 200 });
 
     } catch (err) {
