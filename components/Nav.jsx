@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 const Nav = () => {
   const [providers, setProviders] = useState(null);
   const [toggleDropDown, setToggleDropDown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { data: session } = useSession();
 
@@ -41,13 +42,26 @@ const Nav = () => {
       <div className="hidden sm:flex ">
         {session?.user ? (
           <div className="flex gap-3 md:gap-5">
-            <Link href="/create-prompt" className="black_btn">
+            <Link href="/create-prompt" className="btn btn_black">
               Create Post
             </Link>
-            <button type="button" onClick={signOut} className="outline_btn">
-              Sign Out
+            <button
+              type="button"
+              onClick={() => {
+                setIsLoading(true);
+                return signOut();
+              }}
+              className={`btn ${isLoading ? "btn-disabled" : "btn_outline"}`}
+            >
+              {isLoading ? (
+                <div
+                  className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                ></div>
+              ) : (
+                "Sign Out"
+              )}
             </button>
-
             <Link href="/profile">
               <Image
                 src={session?.user.image}
@@ -65,10 +79,20 @@ const Nav = () => {
                 <button
                   key={provider.name}
                   type="button"
-                  onClick={() => signIn(provider.id)}
-                  className="black_btn"
+                  onClick={() => {
+                    setIsLoading(true);
+                    return signIn(provider.id);
+                  }}
+                  className={`btn ${isLoading ? "btn-disabled" : "btn_black"}`}
                 >
-                  Sign In
+                  {isLoading ? (
+                    <div
+                      className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                      role="status"
+                    ></div>
+                  ) : (
+                    "Sign In"
+                  )}
                 </button>
               ))}
           </>

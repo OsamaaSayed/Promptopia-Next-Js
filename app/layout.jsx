@@ -1,3 +1,5 @@
+import { Toaster } from "react-hot-toast";
+
 import Provider from "@components/Provider";
 import Nav from "@components/Nav";
 
@@ -22,6 +24,7 @@ const RootLayout = ({ children }) => {
             {children}
           </main>
         </Provider>
+        <Toaster position="top-center" />
       </body>
     </html>
   );

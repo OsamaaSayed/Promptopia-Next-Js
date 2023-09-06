@@ -21,7 +21,8 @@ export const POST = async (req) => {
 
     } catch (err) {
         console.log("🚀 ~ file: route.js:24 ~ POST ~ err:", err)
-        return new Response("Failed to create a new prompt", { status: 500 })
+        return new Response(JSON.stringify({ message: "Failed to create a new prompt", err: [err.errors.prompt, err.errors.tag] }), { status: 500 })
     }
 }
+
 

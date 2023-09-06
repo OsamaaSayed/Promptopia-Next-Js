@@ -5,7 +5,13 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
-const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
+const PromptCard = ({
+  post,
+  isLoading,
+  handleTagClick,
+  handleEdit,
+  handleDelete,
+}) => {
   const [copied, setCopied] = useState("");
 
   const { data: session } = useSession();
@@ -22,8 +28,8 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
     <div className="w-full flex flex-1 flex-col items-start gap-5 rounded-lg border border-gray-300 bg-white/20 bg-clip-padding p-6 pb-4 backdrop-blur-lg backdrop-filter">
       <div className="flex-1 flex justify-start gap-4 cursor-pointer">
         <Image
-          src={post.creator.image}
-          alt={post.creator.username}
+          src={post?.creator?.image}
+          alt={post?.creator?.username}
           width={40}
           height={40}
           className="rounded-full object-contain"
@@ -31,21 +37,21 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
 
         <div className="flex flex-col">
           <h3 className="w-fit font-satoshi font-semibold text-gray-900">
-            {post.creator.username}
+            {post?.creator?.username}
           </h3>
           <span className="w-fit font-inter text-sm text-gray-500">
-            {post.creator.email}
+            {post?.creator?.email}
           </span>
         </div>
 
         <div className="copy_btn" onClick={handleCopy}>
           <Image
             src={
-              copied === post.prompt
+              copied === post?.prompt
                 ? "/assets/icons/tick.svg"
                 : "/assets/icons/copy.svg"
             }
-            alt={copied === post.prompt ? "tick_icon" : "copy_icon"}
+            alt={copied === post?.prompt ? "tick_icon" : "copy_icon"}
             width={12}
             height={12}
           />
@@ -61,22 +67,30 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
           {post.tag}
         </p>
 
-        {session?.user.id === post.creator._id && pathName === "/profile" && (
-          <div className="mt-5 flex-center gap-4 border-t border-gray-100 pt-3">
-            <p
-              className="font-inter text-sm green_gradient cursor-pointer"
-              onClick={handleEdit}
-            >
-              Edit
-            </p>
-            <p
-              className="font-inter text-sm orange_gradient cursor-pointer"
-              onClick={handleDelete}
-            >
-              Delete
-            </p>
-          </div>
-        )}
+        {session?.user?.id === post?.creator?._id &&
+          pathName === "/profile" && (
+            <div className="mt-5 flex-center gap-4 border-t border-gray-100 pt-3">
+              <p
+                className="font-inter text-sm green_gradient cursor-pointer"
+                onClick={handleEdit}
+              >
+                Edit
+              </p>
+              <p
+                className={`font-inter text-sm cursor-pointer h-5 ${isLoading ? "text-[#f59e0b]" : "orange_gradient"}`}
+                onClick={handleDelete}
+              >
+                {isLoading ? (
+                  <div
+                    className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                    role="status"
+                  ></div>
+                ) : (
+                  "Delete"
+                )}
+              </p>
+            </div>
+          )}
       </div>
     </div>
   );

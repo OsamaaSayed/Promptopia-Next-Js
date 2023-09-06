@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import Form from "@components/Form";
 
+import { toastError, toastSuccess } from "@utils/toast";
+
 const UpdatePrompt = () => {
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({ prompt: "", tag: "" });
@@ -21,9 +23,17 @@ const UpdatePrompt = () => {
         method: "PATCH",
         body: JSON.stringify({ prompt: post.prompt, tag: post.tag }),
       });
-      if (response.ok) router.push("/");
+      const data = await response.json();
+      console.log(data);
+      if (!response.ok) {
+        toastError(data.message);
+      } else {
+        toastSuccess("Prompt updated successfully");
+        router.push("/");
+      }
     } catch (err) {
       console.log(err);
+      toastError();
     } finally {
       setSubmitting(false);
     }

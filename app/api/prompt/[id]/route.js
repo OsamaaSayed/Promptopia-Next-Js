@@ -35,7 +35,7 @@ export const PATCH = async (req, { params }) => {
 
     } catch (err) {
         console.log("🚀 ~ file: route.js:37 ~ PATCH ~ err:", err);
-        return new Response("Failed to update the prompt", { status: 500 })
+        return new Response(JSON.stringify({ message: "Failed to update the prompt", err: [err.errors.prompt, err.errors.tag] }), { status: 500 })
     }
 }
 
@@ -45,11 +45,11 @@ export const DELETE = async (req, { params }) => {
         await connectToDB();
 
         await Prompt.findByIdAndRemove(params.id);
-        return new Response("Prompt deleted successfully", { status: 200 });
+        return new Response(JSON.stringify({ message: "Prompt deleted successfully" }), { status: 200 });
 
     } catch (err) {
         console.log("🚀 ~ file: route.js:46 ~ DELETE ~ err:", err);
-        return new Response("Failed to delete the prompt", { status: 500 })
+        return new Response(JSON.stringify({ message: "Failed to delete the prompt" }, err), { status: 500 })
     }
 }
 
